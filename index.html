@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Dinâmico 3D</title>
+    <title>Game Portal 3D - Experiência Imersiva</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
@@ -13,112 +13,91 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f1b3e 100%);
             color: #fff;
             overflow-x: hidden;
             min-height: 100vh;
+            cursor: crosshair;
         }
 
-        /* HEADER COM ANIMAÇÃO */
-        header {
-            padding: 20px 0;
+        /* CANVAS 3D */
+        #canvas3d {
             position: fixed;
-            width: 100%;
             top: 0;
-            z-index: 1000;
-            background: rgba(15, 15, 30, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            animation: slideDown 0.6s ease-out;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+
+        /* CONTEÚDO */
+        .content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* HEADER COM EFEITO GLOW */
+        header {
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+            animation: slideDown 0.8s ease-out;
         }
 
         @keyframes slideDown {
             from {
-                transform: translateY(-100%);
                 opacity: 0;
+                transform: translateY(-50px);
             }
             to {
-                transform: translateY(0);
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #00d4ff, #0099ff);
+        h1 {
+            font-size: 60px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: glow 3s ease-in-out infinite;
+            animation: gradientFlow 4s ease infinite, titleGlow 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            font-weight: bold;
         }
 
-        @keyframes glow {
-            0%, 100% {
-                filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8));
-            }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8)); }
+            50% { filter: drop-shadow(0 0 30px rgba(255, 0, 255, 0.8)); }
         }
 
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            position: relative;
-            transition: 0.3s;
+        .subtitle {
+            font-size: 18px;
+            color: #00ffff;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #00d4ff, #0099ff);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* HERO SECTION COM 3D */
-        .hero {
-            margin-top: 80px;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            flex: 1;
-            animation: fadeInUp 0.8s ease-out;
-            z-index: 10;
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 1400px;
+            margin: 80px auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            animation: fadeInUp 0.8s ease-out 0.5s both;
         }
 
         @keyframes fadeInUp {
@@ -132,346 +111,665 @@
             }
         }
 
-        .hero h1 {
-            font-size: 60px;
-            margin-bottom: 20px;
-            line-height: 1.2;
-            background: linear-gradient(45deg, #00d4ff, #0099ff, #ff006e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textShimmer 3s infinite;
-        }
-
-        @keyframes textShimmer {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        .hero p {
-            font-size: 18px;
-            color: #b0b0b0;
-            margin-bottom: 30px;
-            line-height: 1.6;
-            max-width: 500px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, #00d4ff, #0099ff);
-            color: #000;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-            cursor: pointer;
-            border: none;
-            font-size: 16px;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.8);
-        }
-
-        /* CANVAS 3D */
-        #canvas3d {
-            flex: 1;
-            height: 400px;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
-        }
-
-        /* CARDS COM EFEITO HOVER */
-        .features {
-            padding: 80px 40px;
-            background: rgba(26, 26, 46, 0.5);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 40px;
-            margin-bottom: 60px;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
+        /* CARDS COM EFEITO 3D */
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 30px;
-            border-radius: 15px;
+            background: rgba(10, 20, 40, 0.7);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
             backdrop-filter: blur(10px);
-            transition: all 0.3s;
             cursor: pointer;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+            pointer-events: auto;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(0, 212, 255, 0.8);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
-            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.8);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            background: rgba(0, 255, 255, 0.1);
         }
 
-        .card h3 {
-            font-size: 22px;
+        .card h2 {
+            font-size: 28px;
             margin-bottom: 15px;
-            color: #00d4ff;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
         }
 
         .card p {
-            color: #b0b0b0;
-            line-height: 1.6;
+            color: #b0d4ff;
+            line-height: 1.8;
+            margin-bottom: 20px;
         }
 
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #808080;
-            margin-top: 60px;
+        /* BOTÕES COM EFEITO GAME */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        /* PARTICLES ANIMADAS */
-        .particles {
+        .btn {
+            padding: 12px 30px;
+            border: 2px solid;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00ffff, #0099ff);
+            border-color: #00ffff;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), 0 0 60px rgba(0, 150, 255, 0.6);
+            filter: brightness(1.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff00ff, #ff0088);
+            border-color: #ff00ff;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .btn-secondary:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.8), 0 0 60px rgba(255, 0, 136, 0.6);
+            filter: brightness(1.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            border-color: #00ff00;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn-success:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.8), 0 0 60px rgba(0, 204, 0, 0.6);
+            filter: brightness(1.3);
+        }
+
+        /* POPUP MODAL */
+        .modal {
+            display: none;
             position: fixed;
-            top: 0;
+            z-index: 2000;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(26, 26, 62, 0.95));
+            margin: 5% auto;
+            padding: 40px;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.5), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            animation: popUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(0.5) rotateX(90deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotateX(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            color: #00ffff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #ff00ff;
+            transform: scale(1.3) rotate(90deg);
+        }
+
+        .modal-content h2 {
+            color: #00ffff;
+            margin-top: 20px;
+            font-size: 32px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .modal-content p {
+            color: #b0d4ff;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #00ffff, #0099ff);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .modal-btn:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* STATS DISPLAY */
+        .stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(10, 20, 40, 0.8);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 100;
+            pointer-events: auto;
+            min-width: 200px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .stat-item {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #00ffff;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
+        }
+
+        .stat-value {
+            color: #ffff00;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* CURSOR CUSTOMIZADO */
+        .cursor-glow {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(0, 255, 255, 0.8);
+            border-radius: 50%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 9999;
+            transform: translate(-15px, -15px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), inset 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        /* PARTICLES */
+        .particle-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 500;
         }
 
         .particle {
             position: absolute;
-            background: rgba(0, 212, 255, 0.5);
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #00ffff, rgba(0, 255, 255, 0));
             border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
         }
 
         /* RESPONSIVO */
-        @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-                padding: 0 20px;
-                margin-top: 100px;
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
 
-            .hero h1 {
+            h1 {
                 font-size: 40px;
             }
 
-            .nav-links {
-                gap: 15px;
+            .stats {
+                top: 10px;
+                right: 10px;
+                min-width: 150px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 60px auto;
             }
 
-            #canvas3d {
-                height: 300px;
-                margin-top: 30px;
+            h1 {
+                font-size: 32px;
             }
 
-            .features {
-                padding: 40px 20px;
+            .card {
+                padding: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
+    <!-- CANVAS 3D -->
+    <canvas id="canvas3d"></canvas>
 
-    <header>
-        <nav>
-            <div class="logo">✨ DEV</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Recursos</a></li>
-                <li><a href="#contact">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
+    <!-- CURSOR CUSTOMIZADO -->
+    <div class="cursor-glow" id="cursorGlow"></div>
 
-    <div class="hero" id="home">
-        <div class="hero-content">
-            <h1>Bem-vindo ao Futuro</h1>
-            <p>Descubra um site com animações dinâmicas, efeitos 3D incríveis e design moderno. Perfeito para impressionar visitantes.</p>
-            <button class="cta-button" onclick="alert('Bem-vindo! Clique em Recursos para ver mais.')">Explorar Agora</button>
+    <!-- CONTEÚDO -->
+    <div class="content">
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat-item">🎮 <span class="stat-value" id="clicks">0</span> Cliques</div>
+            <div class="stat-item">⚡ <span class="stat-value" id="energy">100</span>% Energia</div>
+            <div class="stat-item">🎯 <span class="stat-value" id="level">Level 1</span></div>
         </div>
-        <canvas id="canvas3d"></canvas>
+
+        <!-- HEADER -->
+        <header>
+            <h1>🌌 GAME PORTAL 3D 🌌</h1>
+            <p class="subtitle">Bem-vindo a uma experiência imersiva e interativa</p>
+        </header>
+
+        <!-- CONTAINER PRINCIPAL -->
+        <div class="container">
+            <!-- CARD 1 -->
+            <div class="card">
+                <h2>⚔️ Modo Aventura</h2>
+                <p>Explore um mundo 3D dinâmico com animações incríveis. Cada clique ativa efeitos visuais especiais e evolui seu personagem.</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="clickAction('Aventura', 1)">Jogar Agora</button>
+                    <button class="btn btn-secondary" onclick="showModal('aventura')">Mais Info</button>
+                </div>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="card">
+                <h2>🚀 Desafios Especiais</h2>
+                <p>Complete desafios épicos, desbloqueie achievements e compita com outros jogadores. Quanto mais você joga, mais poderoso fica!</p>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="clickAction('Desafios', 2)">Começar Desafio</button>
+                    <button class="btn btn-secondary" onclick="showModal('desafios')">Ver Ranking</button>
+                </div>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="card">
+                <h2>💎 Coleção Premium</h2>
+                <p>Acumule cristais, desbloqueie poderes especiais e personalize seu avatar. Cada ação te deixa mais forte!</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="clickAction('Premium', 3)">Coletar Cristais</button>
+                    <button class="btn btn-secondary" onclick="showModal('premium')">Ver Loja</button>
+                </div>
+            </div>
+
+            <!-- CARD 4 -->
+            <div class="card">
+                <h2>🏆 Achievements</h2>
+                <p>Desbloqueie badges exclusivos, suba de nível e torne-se lenda. Cada conquista te aproxima de ser invencível!</p>
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="clickAction('Achievements', 4)">Ver Achievements</button>
+                    <button class="btn btn-secondary" onclick="showModal('achievements')">Progresso</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <section class="features" id="features">
-        <h2>Recursos Especiais</h2>
-        <div class="cards-grid">
-            <div class="card">
-                <h3>🎨 Design Moderno</h3>
-                <p>Interface responsiva com gradientes vibrantes e cores dinâmicas que funcionam em todos os dispositivos.</p>
-            </div>
-            <div class="card">
-                <h3>✨ Animações Suaves</h3>
-                <p>Transições elegantes e animações que criam uma experiência visual memorável para seus visitantes.</p>
-            </div>
-            <div class="card">
-                <h3>🎯 3D Interativo</h3>
-                <p>Elementos tridimensionais renderizados com Three.js para um impacto visual extraordinário.</p>
-            </div>
-            <div class="card">
-                <h3>📱 Responsivo</h3>
-                <p>Funciona perfeitamente em desktop, tablet e mobile com adaptação automática de layout.</p>
-            </div>
-            <div class="card">
-                <h3>⚡ Performance</h3>
-                <p>Otimizado para carregar rápido sem comprometer a qualidade visual dos efeitos.</p>
-            </div>
-            <div class="card">
-                <h3>🚀 Pronto para Usar</h3>
-                <p>Cole o código direto no Google Sites e veja a magia acontecer imediatamente.</p>
-            </div>
+    <!-- MODALS -->
+    <div id="modal-aventura" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('aventura')">&times;</span>
+            <h2>⚔️ Modo Aventura</h2>
+            <p>Este é o modo clássico! Navegue por um mundo tridimensional, colete pontos e desbloqueie novas fases.</p>
+            <p><strong>Dificuldade:</strong> Progressiva | <strong>Tempo:</strong> Ilimitado</p>
+            <button class="modal-btn" onclick="startGame('aventura')">Iniciar Jogo</button>
         </div>
-    </section>
+    </div>
 
-    <footer id="contact">
-        <p>&copy; 2025 Seu Site Incrível | Criado com 💜 e JavaScript</p>
-    </footer>
+    <div id="modal-desafios" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('desafios')">&times;</span>
+            <h2>🚀 Desafios Especiais</h2>
+            <p>Desafios semanais com recompensas épicas! Competir com amigos e suba no ranking global.</p>
+            <p><strong>Prêmio:</strong> 1000 XP + Cristais | <strong>Duração:</strong> 7 dias</p>
+            <button class="modal-btn" onclick="startGame('desafios')">Aceitar Desafio</button>
+        </div>
+    </div>
+
+    <div id="modal-premium" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('premium')">&times;</span>
+            <h2>💎 Coleção Premium</h2>
+            <p>Itens exclusivos e poderosos disponíveis apenas para membros VIP. Transforme-se em uma lenda!</p>
+            <p><strong>Membros VIP:</strong> Acesso total | <strong>Bônus:</strong> 2x XP</p>
+            <button class="modal-btn" onclick="startGame('premium')">Tornar-se VIP</button>
+        </div>
+    </div>
+
+    <div id="modal-achievements" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('achievements')">&times;</span>
+            <h2>🏆 Achievements</h2>
+            <p>Desbloqueie 100+ achievements únicos! Bronze, Prata, Ouro, Platina e Diamante.</p>
+            <p><strong>Seu Progresso:</strong> 25/100 | <strong>Próximo:</strong> Platina</p>
+            <button class="modal-btn" onclick="startGame('achievements')">Ver Todos</button>
+        </div>
+    </div>
 
     <script>
-        // CRIAR PARTÍCULAS ANIMADAS
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
+        // VARIÁVEIS DE JOGO
+        let gameStats = {
+            clicks: 0,
+            energy: 100,
+            level: 1,
+            crystals: 0
+        };
+
+        // CURSOR CUSTOMIZADO
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.getElementById('cursorGlow');
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // AÇÃO DE CLIQUE COM EFEITOS
+        function clickAction(action, cardId) {
+            gameStats.clicks++;
+            gameStats.energy = Math.max(0, gameStats.energy - 5);
+            gameStats.level = Math.floor(gameStats.clicks / 10) + 1;
+
+            updateStats();
+            createParticleBurst(event.clientX, event.clientY);
+            showFloatingText(action, event.clientX, event.clientY);
+            vibrateScreen();
+        }
+
+        // ATUALIZAR STATS NA TELA
+        function updateStats() {
+            document.getElementById('clicks').textContent = gameStats.clicks;
+            document.getElementById('energy').textContent = Math.max(0, gameStats.energy);
+            document.getElementById('level').textContent = 'Level ' + gameStats.level;
+        }
+
+        // CRIADOR DE PARTÍCULAS
+        function createParticleBurst(x, y) {
+            const colors = ['#00ffff', '#ff00ff', '#ffff00', '#00ff00'];
+            for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.width = Math.random() * 5 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                particlesContainer.appendChild(particle);
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                document.body.appendChild(particle);
+
+                const angle = (Math.PI * 2 * i) / 15;
+                const velocity = 5 + Math.random() * 5;
+                let px = x, py = y;
+                let vx = Math.cos(angle) * velocity;
+                let vy = Math.sin(angle) * velocity;
+
+                const animate = () => {
+                    px += vx;
+                    py += vy;
+                    vy += 0.2;
+                    particle.style.left = px + 'px';
+                    particle.style.top = py + 'px';
+                    particle.style.opacity = Math.max(0, parseFloat(particle.style.opacity || 1) - 0.02);
+
+                    if (parseFloat(particle.style.opacity) > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+
+                animate();
             }
         }
 
-        // CANVAS 3D COM THREE.JS
+        // TEXTO FLUTUANTE
+        function showFloatingText(text, x, y) {
+            const floatingText = document.createElement('div');
+            floatingText.style.position = 'fixed';
+            floatingText.style.left = x + 'px';
+            floatingText.style.top = y + 'px';
+            floatingText.style.color = '#ffff00';
+            floatingText.style.fontSize = '24px';
+            floatingText.style.fontWeight = 'bold';
+            floatingText.style.pointerEvents = 'none';
+            floatingText.style.textShadow = '0 0 10px rgba(255, 255, 0, 0.8)';
+            floatingText.style.zIndex = '999';
+            floatingText.textContent = '+' + gameStats.level + '0 XP';
+
+            document.body.appendChild(floatingText);
+
+            let opacity = 1;
+            const interval = setInterval(() => {
+                opacity -= 0.05;
+                y -= 2;
+                floatingText.style.opacity = opacity;
+                floatingText.style.top = y + 'px';
+
+                if (opacity <= 0) {
+                    clearInterval(interval);
+                    floatingText.remove();
+                }
+            }, 30);
+        }
+
+        // EFEITO VIBRAÇÃO NA TELA
+        function vibrateScreen() {
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
+            }
+            document.body.style.animation = 'none';
+            setTimeout(() => {
+                document.body.style.animation = 'shake 0.3s';
+            }, 10);
+        }
+
+        // ADICIONAR KEYFRAME DE SHAKE
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // MODAL FUNCTIONS
+        function showModal(type) {
+            document.getElementById(`modal-${type}`).style.display = 'block';
+        }
+
+        function closeModal(type) {
+            document.getElementById(`modal-${type}`).style.display = 'none';
+        }
+
+        function startGame(type) {
+            alert('🎮 Iniciando ' + type + '! Divirta-se!');
+            closeModal(type);
+            clickAction(type, 0);
+        }
+
+        // FECHAR MODAL AO CLICAR FORA
+        window.onclick = (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+
+        // THREE.JS 3D COM MÚLTIPLOS OBJETOS
         function init3D() {
             const canvas = document.getElementById('canvas3d');
             if (!canvas) return;
 
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0f0f1e);
+            scene.background = new THREE.Color(0x0a0e27);
+            scene.fog = new THREE.Fog(0x0a0e27, 100, 200);
 
-            const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-            camera.position.z = 5;
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 8;
 
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
 
-            // CRIAR GEOMETRIA 3D - CUBO ROTATIVO
-            const geometry = new THREE.BoxGeometry(2, 2, 2);
-            const material = new THREE.MeshPhongMaterial({
-                color: 0x00d4ff,
+            // CRIAR MÚLTIPLOS OBJETOS 3D
+            const objects = [];
+
+            // Objeto 1: Cubo
+            const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
+            const cubeMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00ffff,
                 emissive: 0x0099ff,
-                shininess: 100,
-                wireframe: false
+                wireframe: false,
+                shininess: 100
             });
-            const cube = new THREE.Mesh(geometry, material);
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.position.x = -4;
+            cube.castShadow = true;
             scene.add(cube);
+            objects.push({ mesh: cube, rotX: 0.005, rotY: 0.01 });
 
-            // ADICIONAR ICOSAEDRO
+            // Objeto 2: Esfera
+            const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+            const sphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0xff00ff,
+                emissive: 0xff0088,
+                shininess: 100
+            });
+            const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphere.position.x = 0;
+            sphere.castShadow = true;
+            scene.add(sphere);
+            objects.push({ mesh: sphere, rotX: 0.003, rotY: 0.008 });
+
+            // Objeto 3: Icosaedro
             const icoGeometry = new THREE.IcosahedronGeometry(1.5, 4);
             const icoMaterial = new THREE.MeshPhongMaterial({
-                color: 0xff006e,
-                emissive: 0xff0050,
+                color: 0x00ff00,
+                emissive: 0x00cc00,
                 shininess: 100
             });
             const icosaedron = new THREE.Mesh(icoGeometry, icoMaterial);
-            icosaedron.position.x = 3;
+            icosaedron.position.x = 4;
+            icosaedron.castShadow = true;
             scene.add(icosaedron);
+            objects.push({ mesh: icosaedron, rotX: 0.007, rotY: 0.004 });
 
             // ILUMINAÇÃO
-            const light1 = new THREE.PointLight(0x00d4ff, 1, 100);
-            light1.position.set(5, 5, 5);
+            const light1 = new THREE.PointLight(0x00ffff, 1.2, 100);
+            light1.position.set(10, 10, 10);
+            light1.castShadow = true;
             scene.add(light1);
 
-            const light2 = new THREE.PointLight(0xff006e, 1, 100);
-            light2.position.set(-5, -5, 5);
+            const light2 = new THREE.PointLight(0xff00ff, 1, 80);
+            light2.position.set(-10, -10, 10);
+            light2.castShadow = true;
             scene.add(light2);
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            const light3 = new THREE.PointLight(0x00ff00, 0.8, 80);
+            light3.position.set(0, 15, 0);
+            light3.castShadow = true;
+            scene.add(light3);
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
-            // ANIMAÇÃO
-            function animate() {
+            // ANIMAÇÃO PRINCIPAL
+            const animate = () => {
                 requestAnimationFrame(animate);
 
-                cube.rotation.x += 0.005;
-                cube.rotation.y += 0.01;
-
-                icosaedron.rotation.x -= 0.003;
-                icosaedron.rotation.y -= 0.008;
-                icosaedron.position.x = 3 + Math.sin(Date.now() * 0.001) * 0.5;
+                // Rotacionar objetos
+                objects.forEach(obj => {
+                    obj.mesh.rotation.x += obj.rotX;
+                    obj.mesh.rotation.y += obj.rotY;
+                    
+                    // Movimento flutuante
+                    obj.mesh.position.y = Math.sin(Date.now() * 0.001) * 1.5;
+                });
 
                 renderer.render(scene, camera);
-            }
+            };
 
             animate();
 
             // RESPONSIVIDADE
             window.addEventListener('resize', () => {
-                if (canvas.parentElement.offsetWidth > 0) {
-                    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-                }
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
             });
         }
 
-        // SCROLL SUAVE
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
+        // INICIALIZAR
+        window.addEventListener('load', () => {
+            init3D();
         });
-
-        // INICIALIZAR TUDO
-        createParticles();
-        setTimeout(init3D, 100);
     </script>
 </body>
 </html>
